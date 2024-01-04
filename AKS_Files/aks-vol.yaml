@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mycontapp-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mycontapp
+  template:
+    metadata:
+      labels:
+        app: mycontapp
+    spec:
+      containers:
+      - name: mycontapp-deployment
+        image: myconte34.azurecr.io/mydemoapp23:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/data
+      volumes:
+       - name: config-volume
+               
+         persistentVolumeClaim: 
+          claimName: config-volume
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mycontapp-service
+spec:
+  selector:
+    app: mycontapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

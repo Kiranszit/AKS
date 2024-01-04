@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-cm
+data:
+  # Key-value pairs representing configuration data
+  database_url: "mongodb://example.com:27017"
+  api_key: "your_api_key"
+  app_config: |
+    {
+      "debug": true,
+      "log_level": "info"
+    }

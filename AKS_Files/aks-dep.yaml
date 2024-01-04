@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mycontapp-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mycontapp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1   
+  template:
+    metadata:
+      labels:
+        app: mycontapp
+    spec:
+      containers:
+      - name: mycontapp-container
+        image: myconte34.azurecr.io/mydemoapp23:custom
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+      volumes:
+      - name: config-volume
+        configMap:
+         name: test-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mycontapp-service
+spec:
+  selector:
+    app: mycontapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
